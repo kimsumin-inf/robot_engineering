@@ -16,15 +16,14 @@ private:
 	*/
 	std::vector<int> tmp_vec;
 	std::vector<float> Rot;
-	
+
 	// vector 에 값을 넣기 위한 변수 tmp
 	int tmp;
 	float sum;
-public :
-	Homogeneous_transformation(std::vector<std::vector<int>> &Matrix1,
-	std::vector<std::vector<int>> &Matrix2);
+public:
+	Homogeneous_transformation(std::vector<std::vector<int>>& Matrix1,
+		std::vector<std::vector<int>>& Matrix2);
 
-	
 	void Show(std::vector<std::vector<int>> Matrix1,
 		std::vector<std::vector<int>> Matrix2,
 		std::vector<std::vector<int>> Result_Matrix,
@@ -33,16 +32,14 @@ public :
 	void Show(
 		std::vector<std::vector<int>> show);
 
-
 	void HT_Multiply(
 		std::vector<std::vector<int>> Matrix1,
 		std::vector<std::vector<int>> Matrix2,
-		std::vector<std::vector<int>> &Result_Matrix);
+		std::vector<std::vector<int>>& Result_Matrix);
 
 	void HT_Inverse(
 		std::vector<std::vector<int>> Matrix,
-		std::vector<std::vector<int>> &Inverse_Matrix);
-	
-	void swap(int &a,int &b);
-};
+		std::vector<std::vector<int>>& Inverse_Matrix);
 
+	void swap(int& a, int& b);
+};

@@ -3,9 +3,9 @@
 using namespace std;
 
 Homogeneous_transformation::Homogeneous_transformation(
-	std::vector<std::vector<int>> &Matrix1,
-	std::vector<std::vector<int>> &Matrix2) 
-	:tmp(0),sum(0){
+	std::vector<std::vector<int>>& Matrix1,
+	std::vector<std::vector<int>>& Matrix2)
+	:tmp(0), sum(0) {
 	cout << "U_T_R ют╥б " << endl;
 	for (int i = 0; i < COLS; i++) {
 		for (int j = 0; j < ROWS; j++) {
@@ -36,12 +36,10 @@ void Homogeneous_transformation::Show(
 		cout << "=";
 	}
 
-
 	cout << "\nU_T_R" << endl;
 	for (int i = 0; i < COLS; i++) {
 		for (int j = 0; j < ROWS; j++) {
-			cout << Matrix1[i][j] << ' '<<' ';
-
+			cout << Matrix1[i][j] << ' ' << ' ';
 		}
 		cout << endl;
 	}
@@ -50,7 +48,6 @@ void Homogeneous_transformation::Show(
 	for (int i = 0; i < COLS; i++) {
 		for (int j = 0; j < ROWS; j++) {
 			cout << Matrix2[i][j] << ' ' << ' ';
-
 		}
 		cout << endl;
 	}
@@ -59,7 +56,6 @@ void Homogeneous_transformation::Show(
 	for (int i = 0; i < COLS; i++) {
 		for (int j = 0; j < ROWS; j++) {
 			cout << Result_Matrix[i][j] << ' ';
-
 		}
 		cout << endl;
 		cout << endl;
@@ -68,7 +64,6 @@ void Homogeneous_transformation::Show(
 	for (int i = 0; i < COLS; i++) {
 		for (int j = 0; j < ROWS; j++) {
 			cout << Inverse_Matrix[i][j] << ' ';
-
 		}
 		cout << endl;
 
@@ -90,17 +85,15 @@ void Homogeneous_transformation::Show(
 
 void Homogeneous_transformation::Show(
 	std::vector<std::vector<int>> Matrix
-	) {
+) {
 	for (int i = 0; i < 100; i++) {
 		cout << "=";
 	}
-
 
 	cout << "\nresult" << endl;
 	for (int i = 0; i < COLS; i++) {
 		for (int j = 0; j < ROWS; j++) {
 			cout << Matrix[i][j] << ' ';
-
 		}
 		cout << endl;
 	}
@@ -109,16 +102,12 @@ void Homogeneous_transformation::Show(
 		cout << "=";
 	}
 	cout << endl;
-
-	
 }
-
-
 
 void Homogeneous_transformation::HT_Multiply(
 	std::vector<std::vector<int>> Matrix1,
 	std::vector<std::vector<int>> Matrix2,
-	std::vector<std::vector<int>> &Result_Matrix) {
+	std::vector<std::vector<int>>& Result_Matrix) {
 	for (int i = 0; i < COLS; i++) {
 		for (int j = 0; j < ROWS; j++) {
 			tmp = 0;
@@ -143,8 +132,6 @@ void Homogeneous_transformation::swap(int& a, int& b) {
 void Homogeneous_transformation::HT_Inverse(
 	std::vector<std::vector<int>> Matrix,
 	std::vector<std::vector<int>>& Inverse_Matrix) {
-	
-
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
 			sum += pow(Matrix[i][j], 2);
@@ -159,19 +146,17 @@ void Homogeneous_transformation::HT_Inverse(
 	}
 	Rot.push_back(float(pow(sum, 0.5f)));
 
-
-	for (int i = 0; i <2 ; i++) {
+	for (int i = 0; i < 2; i++) {
 		for (int j = 0; j < 2; j++) {
 			for (int k = 1; k < 3; k++) {
-				if (i==j)
+				if (i == j)
 					swap(Matrix[i][k], Matrix[k][j]);
 			}
 		}
 	}
-	
-	
+
 	for (int i = 0; i < 3; i++) {
-		Matrix[i][3]= -1*(Rot[i]*Rot[3]);
+		Matrix[i][3] = -1 * (Rot[i] * Rot[3]);
 	}
 
 	Inverse_Matrix = Matrix;
@@ -181,4 +166,3 @@ void Homogeneous_transformation::HT_Inverse(
 	swap(Inverse_Matrix[1][2], Inverse_Matrix[2][1]);
 	*/
 }
-
