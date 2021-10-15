@@ -1,0 +1,4 @@
+﻿  Inverse_Kinematics.cpp
+C:\Users\sumin\Desktop\2021-2 수업\robot_engineering\practice\exercise2\Inverse_Kinematics.cpp(90,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\sumin\Desktop\2021-2 수업\robot_engineering\practice\exercise2\Inverse_Kinematics.cpp(96,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  exercise2.vcxproj -> C:\Users\sumin\Desktop\2021-2 수업\robot_engineering\practice\Debug\exercise2.exe
