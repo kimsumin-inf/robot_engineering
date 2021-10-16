@@ -13,7 +13,7 @@
 #define a3 1
 #define a4 0.1
 
-#define TOTAL_CASE 8
+#define TOTAL_CASE 1
 class Inverse_Kinematics
 {
 private:

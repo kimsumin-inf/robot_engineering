@@ -13,6 +13,7 @@ Inverse_Kinematics::Inverse_Kinematics(
 	vector <double>& POS, vector <double>& RPY)
 	:tmp(0)
 {
+	//POS< RPY initialize
 	cout << "POS ют╥б" << endl;
 	for (int i = 0; i < Pos; i++) {
 		cin >> tmp;
@@ -98,9 +99,8 @@ void Inverse_Kinematics::POSRPY_TO_HT(
 	Matrix[1][2] =
 		(sin(RPY[0]) * sin(RPY[1]) * cos(RPY[2])) -
 		(cos(RPY[0]) * sin(RPY[2]));
-	Matrix[2][0] =
-		-(sin(RPY[0]));
-	Matrix[2][1] = cos(RPY[0]) * sin(RPY[2]);
+	Matrix[2][0] =-(sin(RPY[1]));
+	Matrix[2][1] = cos(RPY[1]) * sin(RPY[2]);
 	Matrix[2][2] = cos(RPY[1]) * cos(RPY[2]);
 	Matrix[3][3] = 1;
 
@@ -125,20 +125,26 @@ void Inverse_Kinematics::INV_KIN(
 {
 	tmp = 0;
 	double c3 = 0;
-	double s3[2] = { pow(1 - pow(c3,2),1 / 2),-pow(1 - pow(c3,2),1 / 2) };
+	double s3[2] = {};
+
+	s3[0] = pow(1 - pow(c3, 2), 1 / 2);
+	s3[1] = -pow(1 - pow(c3, 2), 1 / 2);
 	J_A.clear();
+	
 	for (int i = 0; i < 6; i++)
 		J_A.push_back(0);
 
 	switch (Case) {
 		//0:theta1 , theta234, +s3
 	case 0:
+
+		//INV_KIN
 	{
 		J_A[0] = atan2(R_T_H[1][3], R_T_H[0][3]);
-		tmp = atan2(R_T_H[2][2], cos(J_A[0]) * R_T_H[0][2] + sin(J_A[0]) * R_T_H[0][1]);
+		tmp = atan2(R_T_H[2][2], cos(J_A[0]) * R_T_H[0][2] + sin(J_A[0]) * R_T_H[1][2]);
 		c3 = (pow((R_T_H[0][3] * cos(J_A[0]) + R_T_H[1][3] * sin(J_A[0]) - cos(tmp) * a4), 2) +
 			pow((R_T_H[2][3] - sin(tmp) * a4), 2) - pow(a2, 2) - pow(a3, 2)) / (2 * a2 * a3);
-
+		s3[0] = sqrt(1 - pow(c3, 2));
 		J_A[2] = atan2(s3[0], c3);
 		J_A[1] = atan2((c3 * a3 + a2) * (R_T_H[2][3] - sin(tmp) * a4) - s3[0] * a3 * (R_T_H[0][3] * cos(J_A[0]) +
 			R_T_H[1][3] * sin(J_A[0]) - cos(tmp) * a4), (c3 * a3 + a2) * (R_T_H[0][3] * cos(J_A[0]) + R_T_H[1][3] * sin(J_A[0]) -
@@ -150,15 +156,17 @@ void Inverse_Kinematics::INV_KIN(
 			-sin(tmp) * (cos(J_A[0]) * R_T_H[0][1] + sin(J_A[0]) * R_T_H[1][1]) + cos(tmp) * R_T_H[2][1]);
 		Result_joint_angle.push_back(J_A);
 		break;
+
 	}
+	/*
 	//1:theta1 , theta234, -s3
 	case 1:
 	{
 		J_A[0] = atan2(R_T_H[1][3], R_T_H[0][3]);
-		tmp = atan2(R_T_H[2][2], cos(J_A[0]) * R_T_H[0][2] + sin(J_A[0]) * R_T_H[0][1]);
+		tmp = atan2(R_T_H[2][2], cos(J_A[0]) * R_T_H[0][2] + sin(J_A[0]) * R_T_H[1][2]);
 		c3 = (pow((R_T_H[0][3] * cos(J_A[0]) + R_T_H[1][3] * sin(J_A[0]) - cos(tmp) * a4), 2) +
 			pow((R_T_H[2][3] - sin(tmp) * a4), 2) - pow(a2, 2) - pow(a3, 2)) / (2 * a2 * a3);
-
+		s3[1] = -sqrt(1 - pow(c3, 2));
 		J_A[2] = atan2(s3[1], c3);
 		J_A[1] = atan2((c3 * a3 + a2) * (R_T_H[2][3] - sin(tmp) * a4) - s3[1] * a3 * (R_T_H[0][3] * cos(J_A[0]) +
 			R_T_H[1][3] * sin(J_A[0]) - cos(tmp) * a4), (c3 * a3 + a2) * (R_T_H[0][3] * cos(J_A[0]) + R_T_H[1][3] * sin(J_A[0]) -
@@ -175,10 +183,10 @@ void Inverse_Kinematics::INV_KIN(
 	case 2:
 	{
 		J_A[0] = atan2(R_T_H[1][3], R_T_H[0][3]);
-		tmp = atan2(R_T_H[2][2], cos(J_A[0]) * R_T_H[0][2] + sin(J_A[0]) * R_T_H[0][1]) + deg2rad(180);
+		tmp = deg2rad(rad2deg((atan2(R_T_H[2][2], cos(J_A[0]) * R_T_H[0][2] + sin(J_A[0]) * R_T_H[1][2])) + 180));
 		c3 = (pow((R_T_H[0][3] * cos(J_A[0]) + R_T_H[1][3] * sin(J_A[0]) - cos(tmp) * a4), 2) +
 			pow((R_T_H[2][3] - sin(tmp) * a4), 2) - pow(a2, 2) - pow(a3, 2)) / (2 * a2 * a3);
-
+		s3[0] = sqrt(1 - pow(c3, 2));
 		J_A[2] = atan2(s3[0], c3);
 		J_A[1] = atan2((c3 * a3 + a2) * (R_T_H[2][3] - sin(tmp) * a4) - s3[0] * a3 * (R_T_H[0][3] * cos(J_A[0]) +
 			R_T_H[1][3] * sin(J_A[0]) - cos(tmp) * a4), (c3 * a3 + a2) * (R_T_H[0][3] * cos(J_A[0]) + R_T_H[1][3] * sin(J_A[0]) -
@@ -195,11 +203,11 @@ void Inverse_Kinematics::INV_KIN(
 	case 3:
 	{
 		J_A[0] = atan2(R_T_H[1][3], R_T_H[0][3]);
-		tmp = atan2(R_T_H[2][2], cos(J_A[0]) * R_T_H[0][2] + sin(J_A[0]) * R_T_H[0][1]) + deg2rad(180);
+		tmp = atan2(R_T_H[2][2], cos(J_A[0]) * R_T_H[0][2] + sin(J_A[0]) * R_T_H[1][2]) + deg2rad(180);
 		c3 = (pow((R_T_H[0][3] * cos(J_A[0]) + R_T_H[1][3] * sin(J_A[0]) - cos(tmp) * a4), 2) +
 			pow((R_T_H[2][3] - sin(tmp) * a4), 2) - pow(a2, 2) - pow(a3, 2)) / (2 * a2 * a3);
-
-		J_A[2] = atan2(s3[1], c3);
+		s3[1] = -sqrt(1 - pow(c3, 2));
+		J_A[2] = atan2(s3[0], c3);
 		J_A[1] = atan2((c3 * a3 + a2) * (R_T_H[2][3] - sin(tmp) * a4) - s3[1] * a3 * (R_T_H[0][3] * cos(J_A[0]) +
 			R_T_H[1][3] * sin(J_A[0]) - cos(tmp) * a4), (c3 * a3 + a2) * (R_T_H[0][3] * cos(J_A[0]) + R_T_H[1][3] * sin(J_A[0]) -
 				cos(tmp) * a4) + s3[1] * a3 * (R_T_H[2][3] - sin(tmp) * a4));
@@ -215,10 +223,10 @@ void Inverse_Kinematics::INV_KIN(
 	case 4:
 	{
 		J_A[0] = atan2(R_T_H[1][3], R_T_H[0][3]) + deg2rad(180);
-		tmp = atan2(R_T_H[2][2], cos(J_A[0]) * R_T_H[0][2] + sin(J_A[0]) * R_T_H[0][1]);
+		tmp = atan2(R_T_H[2][2], cos(J_A[0]) * R_T_H[0][2] + sin(J_A[0]) * R_T_H[1][2]);
 		c3 = (pow((R_T_H[0][3] * cos(J_A[0]) + R_T_H[1][3] * sin(J_A[0]) - cos(tmp) * a4), 2) +
 			pow((R_T_H[2][3] - sin(tmp) * a4), 2) - pow(a2, 2) - pow(a3, 2)) / (2 * a2 * a3);
-
+		s3[0] = sqrt(1 - pow(c3, 2));
 		J_A[2] = atan2(s3[0], c3);
 		J_A[1] = atan2((c3 * a3 + a2) * (R_T_H[2][3] - sin(tmp) * a4) - s3[0] * a3 * (R_T_H[0][3] * cos(J_A[0]) +
 			R_T_H[1][3] * sin(J_A[0]) - cos(tmp) * a4), (c3 * a3 + a2) * (R_T_H[0][3] * cos(J_A[0]) + R_T_H[1][3] * sin(J_A[0]) -
@@ -235,10 +243,10 @@ void Inverse_Kinematics::INV_KIN(
 	case 5:
 	{
 		J_A[0] = atan2(R_T_H[1][3], R_T_H[0][3]) + deg2rad(180);
-		tmp = atan2(R_T_H[2][2], cos(J_A[0]) * R_T_H[0][2] + sin(J_A[0]) * R_T_H[0][1]);
+		tmp = atan2(R_T_H[2][2], cos(J_A[0]) * R_T_H[0][2] + sin(J_A[0]) * R_T_H[1][2]);
 		c3 = (pow((R_T_H[0][3] * cos(J_A[0]) + R_T_H[1][3] * sin(J_A[0]) - cos(tmp) * a4), 2) +
 			pow((R_T_H[2][3] - sin(tmp) * a4), 2) - pow(a2, 2) - pow(a3, 2)) / (2 * a2 * a3);
-
+		s3[1] = -sqrt(1 - pow(c3, 2));
 		J_A[2] = atan2(s3[1], c3);
 		J_A[1] = atan2((c3 * a3 + a2) * (R_T_H[2][3] - sin(tmp) * a4) - s3[1] * a3 * (R_T_H[0][3] * cos(J_A[0]) +
 			R_T_H[1][3] * sin(J_A[0]) - cos(tmp) * a4), (c3 * a3 + a2) * (R_T_H[0][3] * cos(J_A[0]) + R_T_H[1][3] * sin(J_A[0]) -
@@ -255,10 +263,10 @@ void Inverse_Kinematics::INV_KIN(
 	case 6:
 	{
 		J_A[0] = atan2(R_T_H[1][3], R_T_H[0][3]) + deg2rad(180);
-		tmp = atan2(R_T_H[2][2], cos(J_A[0]) * R_T_H[0][2] + sin(J_A[0]) * R_T_H[0][1]) + deg2rad(180);
+		tmp = atan2(R_T_H[2][2], cos(J_A[0]) * R_T_H[0][2] + sin(J_A[0]) * R_T_H[1][2]) + deg2rad(180);
 		c3 = (pow((R_T_H[0][3] * cos(J_A[0]) + R_T_H[1][3] * sin(J_A[0]) - cos(tmp) * a4), 2) +
 			pow((R_T_H[2][3] - sin(tmp) * a4), 2) - pow(a2, 2) - pow(a3, 2)) / (2 * a2 * a3);
-
+		s3[0] = sqrt(1 - pow(c3, 2));
 		J_A[2] = atan2(s3[0], c3);
 		J_A[1] = atan2((c3 * a3 + a2) * (R_T_H[2][3] - sin(tmp) * a4) - s3[0] * a3 * (R_T_H[0][3] * cos(J_A[0]) +
 			R_T_H[1][3] * sin(J_A[0]) - cos(tmp) * a4), (c3 * a3 + a2) * (R_T_H[0][3] * cos(J_A[0]) + R_T_H[1][3] * sin(J_A[0]) -
@@ -275,10 +283,10 @@ void Inverse_Kinematics::INV_KIN(
 	case 7:
 	{
 		J_A[0] = atan2(R_T_H[1][3], R_T_H[0][3]) + deg2rad(180);
-		tmp = atan2(R_T_H[2][2], cos(J_A[0]) * R_T_H[0][2] + sin(J_A[0]) * R_T_H[0][1]) + deg2rad(180);
+		tmp = atan2(R_T_H[2][2], cos(J_A[0]) * R_T_H[0][2] + sin(J_A[0]) * R_T_H[1][2]) + deg2rad(180);
 		c3 = (pow((R_T_H[0][3] * cos(J_A[0]) + R_T_H[1][3] * sin(J_A[0]) - cos(tmp) * a4), 2) +
 			pow((R_T_H[2][3] - sin(tmp) * a4), 2) - pow(a2, 2) - pow(a3, 2)) / (2 * a2 * a3);
-
+		s3[1] = -sqrt(1 - pow(c3, 2));
 		J_A[2] = atan2(s3[1], c3);
 		J_A[1] = atan2((c3 * a3 + a2) * (R_T_H[2][3] - sin(tmp) * a4) - s3[1] * a3 * (R_T_H[0][3] * cos(J_A[0]) +
 			R_T_H[1][3] * sin(J_A[0]) - cos(tmp) * a4), (c3 * a3 + a2) * (R_T_H[0][3] * cos(J_A[0]) + R_T_H[1][3] * sin(J_A[0]) -
@@ -291,6 +299,8 @@ void Inverse_Kinematics::INV_KIN(
 		Result_joint_angle.push_back(J_A);
 		break;
 	}
+
+	*/
 	}
 }
 
